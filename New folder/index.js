@@ -9,12 +9,18 @@ const server = http.createServer(async (req, res) => {
     const objects=q.search.split("&url=")
     objects[0]=objects[0].slice(5)
     let numbers = await []
-    objects.forEach(async(number)=>{
-        const data = await fetchdata(number)
-        console.log(data)
-        numbers= await numbers.concat(data)
-    })
-    console.log(numbers)
+    for(let i = 0; i<objects.length;i++){
+        const data =await fetchdata(objects[i])
+        numbers=numbers.concat(data)
+    }
+    numbers.sort(function(a, b){return a - b})
+    numbers= numbers.filter((item,
+        index) => numbers.indexOf(item) === index)
+   const responsedata= {
+    "numbers": numbers
+   }
+    const jsonContent = JSON.stringify(responsedata);
+  res.end(jsonContent);
   }
 });
 const fetchdata = async (number)=>{
